@@ -1,8 +1,7 @@
-# IC705SMeter
+# HAL9000
 
-Le projet IC7505SMeter permet de doter l'extraordinaire IC705 produit par ICOM,  d'un S-Mètre à aiguille ! C'est tout ;)
+Le projet HAL9000 permet de simuler l'ordinateur HAL de 2001 l'Odysée de l'Espace ! C'est tout ;)
 
-![IC705SMeter](https://github.com/armel/IC705SMeter/blob/main/img/IC750SMeter.jpeg)
 
 # Architecture technique
 
@@ -46,14 +45,17 @@ Coté QSJ, compter autour de 25€. Vous disposez alors d'une plateforme de dév
 
 Le plus simple est d'installer [PlateformIO for VSCode](https://platformio.org/install/ide?install=vscode) sur votre PC (Linux ou Windows) ou sur votre Mac (Intel ou M1). C'est un environnement de développement multiplateforme et multilangage performant, en plus d'être agréable à utiliser.
 
-Ensuite, toujours sur votre PC ou Mac, cloner le projet IC705SMeter via la commande :
+Ensuite, toujours sur votre PC ou Mac, cloner le projet HAL9000 via la commande :
 
-`https://github.com/armel/IC705SMeter.git`
+`https://github.com/armel/HAL9000.git`
 
 ## Compilation et flashage du M5Stack
 
-Ouvrez le projet IC705SMeter avec PlateformIO for VSCode.
-
-Editer éventuellement le fichier `src/IC705SMeter.h` afin de modifier l'adresse de votre IC705 si nécessaire. J'ai indiqué la valeur par défaut.
+Ouvrez le projet HAL9000 avec PlateformIO for VSCode.
 
 Compiler et uploader le projet sur votre M5Stack. C'est terminé.
+
+## Remarque
+
+Ne fonctionne pas, pour le moment, sur le M5Stack Core2
+
