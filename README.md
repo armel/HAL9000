@@ -53,9 +53,19 @@ Ensuite, toujours sur votre PC ou Mac, cloner le projet HAL9000 via la commande 
 
 Ouvrez le projet HAL9000 avec PlateformIO for VSCode.
 
-Compiler et uploader le projet sur votre M5Stack. C'est terminé.
+Compilez et uploadez le projet sur votre M5Stack. C'est terminé.
+
+## Préparation de la carte micro SD
+
+Formatez une carte micro SD au format FAT32.
+Décompressez le fichier `HAL9000.mjpg.zip` que vous trouverez dans le répertoire `img`.
+Copier le à la racine de la carte micro SD.
+Copier également le fichier `HAL9000.jpg` également présent dans le répertoire `img`.
+Vous pouvez alors insérer la carte micro SD dans votre M5Stack.
+
+That's all.
 
 ## Remarque
 
-Ne fonctionne pas, pour le moment, sur le M5Stack Core2
+Ne fonctionne pas, pour le moment, sur le M5Stack Core2.
 
