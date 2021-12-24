@@ -58,9 +58,8 @@ Compilez et uploadez le projet sur votre M5Stack. C'est terminé.
 ## Préparation de la carte micro SD
 
 Formatez une carte micro SD au format FAT32.
-Décompressez le fichier `HAL9000.mjpg.zip` que vous trouverez dans le répertoire `img`.
-Copier le à la racine de la carte micro SD.
-Copier également le fichier `HAL9000.jpg` également présent dans le répertoire `img`.
+Copier l'ensemble des fichiers `.mjpg`, que vous trouverez dans le répertoire `media/video` à la racine de la carte micro SD.
+Copier le fichier `HAL9000.jpg`, que vous trouverez dans le répertoire `media/image` à la racine de la carte micro SD.
 Vous pouvez alors insérer la carte micro SD dans votre M5Stack.
 
 That's all.
