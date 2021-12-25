@@ -6,7 +6,7 @@ for filename in *; do
     ffmpeg -i "$filename" -vf scale=320:-1 -crf 1 -y "$resize"
     convert=`basename "../video/$filename" .mp4`
     convert="../video/$convert.mjpg"
-    ffmpeg -i "$resize" -vf "fps=12" -q:v 2 -crf 1 -y "$convert"
+    ffmpeg -i "$resize" -vf "fps=10" -q:v 2 -crf 1 -y "$convert"
     rm "$resize"
     type=${filename:44:3}
     last=$((${#filename}-10))
