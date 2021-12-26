@@ -19,7 +19,7 @@
 #endif
 
 // Version
-#define VERSION "0.0.5"
+#define VERSION "0.0.6"
 
 // Others define
 #define JPEG_LOGO   "/HAL9000.jpg"
@@ -55,6 +55,7 @@ uint8_t screenCurrent = 0;
 uint8_t screenLast = 0;
 uint8_t videoCurrent = 0;
 uint8_t videoLast = 0;
+uint8_t brightness = 0;
 
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 0 /* rotation */);

@@ -34,10 +34,10 @@ void getVideoList(File dir)
       M5.Lcd.setTextDatum(CC_DATUM);
       M5.Lcd.drawString(entry.name(), 160, 60);
 
-      Serial.println(entry.name());
       if(strstr(entry.name(), "-medium") != NULL) {
         videoFilenameMedium[indiceMedium] = entry.name();
         indiceMedium++;
+        M5.Lcd.setBrightness(brightness + indiceMedium);
         /*
         if(indiceMedium==10) {
           break;
@@ -50,7 +50,8 @@ void getVideoList(File dir)
       }
     }
 
-    if (entry.isDirectory()) {
+    if (entry.isDirectory() && strstr(entry.name(), "/.") == NULL) {
+      Serial.println(entry.name());
       getVideoList(entry);
     }
 
@@ -67,6 +68,30 @@ boolean button()
     return true;
   }
   return false;
+}
+
+// Boot loarder
+boolean boot()
+{
+  if (!SD.begin())
+  {
+    Serial.println(F("ERROR: File System Mount Failed!"));
+    gfx->println(F("ERROR: File System Mount Failed!"));
+  }
+  else
+  {
+    jpegClass.draw(&SD,(char *)JPEG_LOGO, jpegDrawCallback, true, 0, 180, gfx->width(), gfx->height());
+
+    // Get video files
+    root = SD.open("/");
+
+    M5.Lcd.setTextDatum(CC_DATUM);
+    M5.Lcd.drawString("HAL9000", 160, 20);
+    M5.Lcd.drawString("Version " + String(VERSION) + " par F4HWN", 160, 30);
+    M5.Lcd.drawString("Loading kernel", 160, 50);
+    getVideoList(root);
+  }
+  return true;
 }
 
 // video medium

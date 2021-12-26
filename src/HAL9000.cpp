@@ -9,7 +9,7 @@ void setup()
 {
   Serial.begin(115200);
   M5.begin(true, true, false, false);
-  M5.Lcd.setBrightness(128);
+  M5.Lcd.setBrightness(brightness);
 
   // Init Rand
   esp_random();
@@ -19,14 +19,8 @@ void setup()
   gfx->fillScreen(BLACK);
   gfx->invertDisplay(true);
 
-  // Get video files
-  root = SD.open("/");
-
-  M5.Lcd.setTextDatum(CC_DATUM);
-  M5.Lcd.drawString("HAL9000", 160, 20);
-  M5.Lcd.drawString("Version " + String(VERSION) + " par F4HWN", 160, 30);
-  M5.Lcd.drawString("Loading kernel", 160, 50);
-  getVideoList(root);
+  // Boot
+  boot();
 }
 
 // Main loop
