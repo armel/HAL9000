@@ -175,16 +175,19 @@ void small()
 
   M5.Lcd.fillRect(110, 0, 9, 240, BLACK);
   M5.Lcd.fillRect(201, 0, 9, 240, BLACK);
+  M5.Lcd.setTextColor(TFT_DARKGREY);
 
   for(screenCurrent = 0; screenCurrent < 6; screenCurrent++) {
     videoCurrent = random(indiceSmall);
     if(screenCurrent > 2) {
       x = 210;
-      y = 89 * (screenCurrent - 3);
+      y = 80 * (screenCurrent - 3) + 18;
+      M5.Lcd.drawString("C" + String(screenCurrent + 1), 219, y - 8);
     }
     else {
       x = 0;
-      y = 89 * screenCurrent;
+      y = 80 * screenCurrent + 18;
+      M5.Lcd.drawString("C" + String(screenCurrent + 1), 0, y - 8);
     }
 
     mjpegFile = SD.open(videoFilenameSmall[videoCurrent], "r");
@@ -207,11 +210,11 @@ void small()
 
     if(screenCurrent > 2) {
       x = 210;
-      y = 89 * (screenCurrent - 3);
+      y = 80 * (screenCurrent - 3) + 18;
     }
     else {
       x = 0;
-      y = 89 * screenCurrent;
+      y = 80 * screenCurrent + 18;
     }
 
     while(videoCurrent == videoLast) {

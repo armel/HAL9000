@@ -64,7 +64,10 @@ Vous pouvez alors insérer la carte micro SD dans votre M5Stack.
 
 That's all.
 
+## Utilisation
+
+Il existe 2 modes de fonctionnement. Il suffit de presser le bouton central pour basculer de l'un à l'autre. 
+
 ## Remarque
 
 Ne fonctionne pas, pour le moment, sur le M5Stack Core2.
-

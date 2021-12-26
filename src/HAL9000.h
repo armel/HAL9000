@@ -19,7 +19,7 @@
 #endif
 
 // Version
-#define VERSION "0.0.4"
+#define VERSION "0.0.5"
 
 // Others define
 #define JPEG_LOGO   "/HAL9000.jpg"
