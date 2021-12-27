@@ -1,6 +1,7 @@
 # HAL9000
 
 Le projet HAL9000 permet de simuler l'ordinateur HAL de 2001 l'Odysée de l'Espace ! C'est tout ;)
+Video dispo sur [Youtube](https://www.youtube.com/watch?v=s-WNS4vD0eY) ;)
 
 
 # Architecture technique
