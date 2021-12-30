@@ -70,7 +70,7 @@ boolean button()
   return false;
 }
 
-// Boot loarder
+// Boot loader
 boolean boot()
 {
   if (!SD.begin())
@@ -94,14 +94,42 @@ boolean boot()
   return true;
 }
 
-// video medium
-void medium()
+// Eye loader
+boolean eye()
 {
-  total_frames = 0;
-  total_read_video = 0;
-  total_decode_video = 0;
-  total_show_video = 0;
+  gfx->fillScreen(BLACK);
+  M5.Lcd.setBrightness(0);
 
+  if (!SD.begin())
+  {
+    Serial.println(F("ERROR: File System Mount Failed!"));
+    gfx->println(F("ERROR: File System Mount Failed!"));
+  }
+  else
+  {
+    jpegClass.draw(&SD,(char *)JPEG_EYE, jpegDrawCallback, true, 0, 0, gfx->width(), gfx->height());
+  }
+
+  for (uint8_t i = 0; i <= brightness; i++)
+  {
+    M5.Lcd.setBrightness(i);
+    delay(50);
+  }
+
+  delay(1000);
+
+  for (uint8_t i = brightness; i >= 1; i--)
+  {
+    M5.Lcd.setBrightness(i);
+    delay(50);
+  }
+
+  return true;
+}
+
+// video medium init
+void mediumInit()
+{
   gfx->fillScreen(BLACK);
 
   if (!SD.begin())
@@ -113,6 +141,20 @@ void medium()
   {
     jpegClass.draw(&SD,(char *)JPEG_LOGO, jpegDrawCallback, true, 0, 180, gfx->width(), gfx->height());
   }
+  M5.Lcd.setBrightness(brightness);
+}
+
+// video medium
+void medium()
+{
+  uint8_t counter = 0;
+
+  total_frames = 0;
+  total_read_video = 0;
+  total_decode_video = 0;
+  total_show_video = 0;
+
+  mediumInit();
 
   while(1)
   {
@@ -172,19 +214,21 @@ void medium()
     }
     
     videoLast = videoCurrent;
+
+    counter++;
+    if(counter == limit) {
+      eye();
+      mediumInit();
+      counter = 0;
+    }
   }
 }
 
-// videoCurrent small
-void small()
+// video small init
+void smallInit()
 {
   uint16_t x = 0;
   uint16_t y = 0;
-  
-  total_frames = 0;
-  total_read_video = 0;
-  total_decode_video = 0;
-  total_show_video = 0;
 
   gfx->fillScreen(BLACK);
 
@@ -226,6 +270,22 @@ void small()
     mjpegFile.close();        
     free(mjpegBuf);
   }
+  M5.Lcd.setBrightness(brightness);
+}
+
+// videoCurrent small
+void small()
+{
+  uint16_t x = 0;
+  uint16_t y = 0;
+  uint8_t counter = 0;
+  
+  total_frames = 0;
+  total_read_video = 0;
+  total_decode_video = 0;
+  total_show_video = 0;
+
+  smallInit();
 
   while(1)
   {
@@ -300,5 +360,12 @@ void small()
     
     videoLast = videoCurrent;
     screenLast = screenCurrent;
+
+    counter++;
+    if(counter == limit) {
+      eye();
+      smallInit();
+      counter = 0;
+    }
   }
 }

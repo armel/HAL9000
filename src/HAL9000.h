@@ -19,11 +19,12 @@
 #endif
 
 // Version
-#define VERSION "0.0.6"
+#define VERSION "0.0.7"
 
 // Others define
 #define JPEG_LOGO   "/HAL9000.jpg"
-#define JPEG_PANEL   "/HAL9000-panel.jpg"
+#define JPEG_PANEL  "/HAL9000-panel.jpg"
+#define JPEG_EYE    "/HAL9000-eye.jpg"
 #define MJPEG_BUFFER_SIZE 32768 * 2 // memory for a single JPEG frame
 
 // Others include
@@ -55,7 +56,8 @@ uint8_t screenCurrent = 0;
 uint8_t screenLast = 0;
 uint8_t videoCurrent = 0;
 uint8_t videoLast = 0;
-uint8_t brightness = 0;
+uint8_t brightness = 64;
+uint8_t limit = 128;
 
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
 Arduino_GFX *gfx = new Arduino_ILI9342(bus, 33 /* RST */, 0 /* rotation */);
