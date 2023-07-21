@@ -1,74 +1,26 @@
 # HAL9000
 
-Le projet HAL9000 permet de simuler l'ordinateur HAL de 2001 l'Odysée de l'Espace ! C'est tout ;)
-Video dispo sur [Youtube](https://www.youtube.com/watch?v=s-WNS4vD0eY) ;)
+This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simulator on M5Stack. Use cases ? None ! It's just for fun 😎 
+
+# Credits
+ 
+Many thanks to...
+
+| Project             | Author                                                |  Link                                        |
+|:------------------- | :---------------------------------------------------- | :------------------------------------------- |
+| M5Stack             | [M5Stack](https://twitter.com/M5Stack)                | https://github.com/m5stack/M5Stack           |
+| ESP32-targz  | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/ESP32-targz |
+| Arduino_GFX         | Moononournation                           | https://github.com/moononournation/Arduino_GFX           |
+| JPEGDEC             | Larry Bank  | https://github.com/bitbank2/JPEGDEC |
+| FastLED             | FastLED                                               | https://github.com/FastLED/FastLED           |
 
 
-# Architecture technique
+# Donations
 
-## Présentation rapide
+Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6VWM, Robert Agnew KD0TVP, Meinhard Frank Günther DL0CN, Johan Hansson SM0TSC, Tadeusz Pater VA7CPM, Frederic Ulmer F4ESO, Joshua Murray M0JMO, Mark Hammond N8MH, Angel Mateu Muzzio EA4GIG, Hiroshi Sasaki JL7KGW, Robert John Williams VK3IE, Mark Bumstead M0IAX, Félix Symann F1VEO, Patrick Ruhl DG2YRP, Michael Beck DH5DAX, Philippe Nicolas F4IQP, Timothy Nustad KD9KHZ, Martin Blanz DL9SAD, Edmund Thompson AE4TQ, Gregory Kiyoi KN6RUQ, Patrick Samson F6GWE, George Kokolakis SV3QUP, Ambrose "Bo" Barry W4GHV, Roger Bouche F1HCN, Christopher Platt, Pascal Paquet F4ICR, Gregory Kiyoi, Ning Yang BH7JAG, Mitsuhiko Nagasawa JL1LYT, Mike Mann G4GOC, David Cappello, Matt Brinkhoff KB0RXC, Franklin Beider WD9GZ, Robrecht Laurens ON4ROB, Florian Wolters DF2ET and James Gatwood WA9JG for their donations. That’s so kind of them. Thanks so much 🙏🏻
 
-[M5Stack](https://m5stack.com/) est basé sur un ESP-32, dual core, pouvant être cadencé jusqu'à 240 MHz.  Néanmoins, le RRFRemote fonctionne parfaitement à 80 MHz. M5Stack dispose de 16 MB de mémoire flash. Comme tous les ESP, le Wifi est évidement intégré. L'écran 2 pouces IPS couleur, basé sur le chipset ILI9342C, affiche une résolution confortable de 320 x 240 pixels. Il est hyper lumineux. La batterie intégrée fait 110 mAh. Il est possible d'ajouter une batterie supplémentaire (de 700 ou 800mAh) si besoin. 
+If you find this project fun and useful then [buy me a glass of wine](https://www.paypal.me/F4HWN) 🍷 🤗 
 
-En terme de dimensions et de masse, c'est très compact : 54 x 54 x 18mm pour 47,2g. Se trimbale dans la poche sans problème ;) 
+You could use the code F4HWN in order to get 5% discount on the [M5Stack shop](https://shop.m5stack.com/?ref=LUxetaH4) 🎁
 
-## Specs techniques détaillées :
-
-Voici les specs techniques détaillées, pour les curieux :
-
-| Resources |	Description |
-| --------- | ------------ |
-|ESP32| 240MHz dual core, 600 DMIPS, 520KB SRAM, Wi-Fi, dual mode Bluetooth
-Flash| Memory	16MB|
-|Power| Input	5V @ 500mA|
-|Port|	TypeC x 1, GROVE(I2C+I/0+UART) x 1|
-|Core|Bottom Port	PIN (G1，G2，G3，G16, G17, G18, G19, G21, G22, G23, G25, G26, G35, G36)|
-|IPS Screen|	2 inch, 320x240 Colorful TFT LCD, ILI9342C, max brightness 853nit|
-|Button|	Custom button x 3|
-|Speaker|	1W-0928|
-|Battery|	110mAh @ 3.7V|
-|Antenna|	2.4G 3D Antenna|
-|Operating Temperature|	32°F to 104°F ( 0°C to 40°C )|
-|Net weight|	47.2g|
-|Gross weight|	93g|
-|Product Size|	54 x 54 x 18mm|
-|Package Size	|95 x 65 x 25mm|
-|Case Material|	Plastic ( PC )|
-
-## En complément
-
-Coté QSJ, compter autour de 25€. Vous disposez alors d'une plateforme de développement complète, totalement autonome, programmable en C et C++, MicroPython et UIFlow, depuis Linux, Windows ou MacOS, le tout dans un boitier compact et ultra ergonomique.
-
-
-# Installation
-
-## Pré-ambule
-
-Le plus simple est d'installer [PlateformIO for VSCode](https://platformio.org/install/ide?install=vscode) sur votre PC (Linux ou Windows) ou sur votre Mac (Intel ou M1). C'est un environnement de développement multiplateforme et multilangage performant, en plus d'être agréable à utiliser.
-
-Ensuite, toujours sur votre PC ou Mac, cloner le projet HAL9000 via la commande :
-
-`https://github.com/armel/HAL9000.git`
-
-## Compilation et flashage du M5Stack
-
-Ouvrez le projet HAL9000 avec PlateformIO for VSCode.
-
-Compilez et uploadez le projet sur votre M5Stack. C'est terminé.
-
-## Préparation de la carte micro SD
-
-Formatez une carte micro SD au format FAT32.
-Copier l'ensemble des fichiers `.mjpg`, que vous trouverez dans le répertoire `media/video` à la racine de la carte micro SD.
-Copier le fichier `HAL9000.jpg`, que vous trouverez dans le répertoire `media/image` à la racine de la carte micro SD.
-Vous pouvez alors insérer la carte micro SD dans votre M5Stack.
-
-That's all.
-
-## Utilisation
-
-Il existe 2 modes de fonctionnement. Il suffit de presser le bouton central pour basculer de l'un à l'autre. 
-
-## Remarque
-
-Ne fonctionne pas, pour le moment, sur le M5Stack Core2.
+By the way, you can follow me on [Twitter](https://twitter.com/F4HWN) and post pictures of your installation with your M5Stack. It always makes me happy ;) 
