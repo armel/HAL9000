@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // Version
-#define VERSION "0.0.1"
+#define VERSION "0.0.2"
 #define AUTHOR  "F4HWN"
 #define NAME    "HAL9000"
 
