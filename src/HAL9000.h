@@ -52,7 +52,7 @@ uint8_t screenCurrent = 0;
 uint8_t screenLast    = 0;
 uint8_t videoCurrent  = 0;
 uint8_t videoLast     = 0;
-uint8_t brightness    = 32;
+uint8_t brightness    = 16;
 uint8_t limit         = 128;
 
 #if BOARD == CORE
