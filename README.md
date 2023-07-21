@@ -1,4 +1,19 @@
 # HAL9000
+![basic](https://img.shields.io/badge/M5Stack-BASIC-blue)
+![grey](https://img.shields.io/badge/M5Stack-GREY-blue)
+![fire](https://img.shields.io/badge/M5Stack-FIRE-orange)
+![core2](https://img.shields.io/badge/M5Stack-CORE2-green)
+![aws](https://img.shields.io/badge/M5Stack-AWS-orange)
+
+![licence](https://img.shields.io/github/license/armel/ICSMeter)
+![language](https://img.shields.io/github/languages/top/armel/ICSMeter)
+![size](https://img.shields.io/github/repo-size/armel/ICSMeter)
+![version](https://img.shields.io/github/v/release/armel/ICSMeter)
+![activity](https://img.shields.io/github/commit-activity/y/armel/ICSMeter)
+
+**You could use the code F4HWN in order to get 5% discount on the [M5Stack shop](https://shop.m5stack.com/?ref=LUxetaH4) 🎁**
+
+**Many thanks to them and all my [donors](#donations)🙏🏻** 
 
 This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simulator on M5Stack. Use cases ? None ! It's just for fun 😎 
 
@@ -6,14 +21,14 @@ This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simul
  
 Many thanks to...
 
-| Project             | Author                                                |  Link                                        |
-|:------------------- | :---------------------------------------------------- | :------------------------------------------- |
-| M5Stack             | [M5Stack](https://twitter.com/M5Stack)                | https://github.com/m5stack/M5Stack           |
-| ESP32-targz  | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/ESP32-targz |
-| Arduino_GFX         | Moononournation                           | https://github.com/moononournation/Arduino_GFX           |
-| JPEGDEC             | Larry Bank  | https://github.com/bitbank2/JPEGDEC |
-| FastLED             | FastLED                                               | https://github.com/FastLED/FastLED           |
-
+| Project             | Author                                                |  Link                                           |
+|:------------------- | :---------------------------------------------------- | :---------------------------------------------- |
+| The HAL Project     | Joe                                                   | https://www.youtube.com/@TheHALProject/featured |
+| M5Stack             | [M5Stack](https://twitter.com/M5Stack)                | https://github.com/m5stack/M5Stack              |
+| ESP32-targz         | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/ESP32-targz           |
+| Arduino_GFX         | Moononournation                                       | https://github.com/moononournation/Arduino_GFX  |
+| JPEGDEC             | Larry Bank                                            | https://github.com/bitbank2/JPEGDEC             |
+| FastLED             | FastLED                                               | https://github.com/FastLED/FastLED              |
 
 # Donations
 
