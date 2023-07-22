@@ -26,13 +26,9 @@ void getVideoList(File dir) {
       M5.Lcd.drawString(entry.name(), 200, 80);
 
       if (strstr(entry.name(), "-medium") != NULL) {
-        videoFilenameMedium[indiceMedium] = entry.name();
-        indiceMedium++;
-        M5.Lcd.setBrightness(brightness + indiceMedium);
+        videoFilenameMedium[indice] = entry.name();
+        indice++;
         delay(50);
-      } else {
-        videoFilenameSmall[indiceSmall] = entry.name();
-        indiceSmall++;
       }
     }
 
@@ -42,6 +38,38 @@ void getVideoList(File dir) {
     }
 
     entry.close();
+  }
+}
+
+// Check button
+void button(void *pvParameters) {
+  uint8_t btnA, btnB, btnC;
+
+  for (;;) {
+    skip = false;
+
+    M5.update();
+
+    btnA = M5.BtnA.isPressed();
+    btnB = M5.BtnB.isPressed();
+    btnC = M5.BtnC.isPressed();
+
+    if (btnB && load == false) {
+      playWav("/HAL9000.wav");
+      //skip = true;
+    } else if (btnA || btnC) {
+      if (btnA) {
+        brightness -= 4;
+        brightness = (brightness < 4) ? 4 : brightness;
+      } else if (btnC) {
+        brightness += 4;
+        brightness = (brightness >= 248) ? 248 : brightness;
+      }
+      M5.Lcd.setBrightness(brightness);
+      Serial.println(brightness);
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(20));
   }
 }
 
@@ -79,8 +107,7 @@ void myProgressCallback(uint8_t progress) {
 }
 
 // Set M5GO led
-void led()
-{
+void led() {
   // LED
   RGBColor m5goColor = M5.Lcd.readPixelRGB(100, 0);
   for (uint8_t i = 0; i <= 9; i++) {
@@ -102,7 +129,7 @@ boolean boot() {
     // Get video files
     root = LittleFS.open("/");
 
-    M5.Lcd.setFont(&tahoma6pt7b);
+    M5.Lcd.setFont(&Ubuntu_Medium6pt7b);
     M5.Lcd.setTextDatum(CC_DATUM);
     M5.Lcd.setTextColor(TFT_WHITE, TFT_BOOT);
     M5.Lcd.drawString("HAL9000 Version " + String(VERSION), 200, 20);
@@ -117,11 +144,12 @@ boolean boot() {
       delay(250);
     }
 
-    //M5.Lcd.drawFastHLine(90, 120, 220, TFT_WHITE);
+    // M5.Lcd.drawFastHLine(90, 120, 220, TFT_WHITE);
 
     M5.Lcd.drawString("I'm sorry Dave,", 200, 140);
     M5.Lcd.drawString("I'm afraid I can't do that.", 200, 155);
-    delay(500);
+
+    playWav("/HAL9000.wav");
 
     M5.Lcd.drawString("HAL 9000 to Dr. Bowman.", 200, 185);
     M5.Lcd.drawString("2001: A space odyssey.", 200, 200);
@@ -167,29 +195,6 @@ void mediumInit() {
   M5.Lcd.setBrightness(brightness);
 }
 
-// Check button
-boolean button() {
-  M5.update();
-
-  if (M5.BtnB.wasPressed()) {
-    eye();
-    mediumInit();
-    return true;
-  } else if (M5.BtnA.isPressed() || M5.BtnC.isPressed()) {
-    if (M5.BtnA.isPressed()) {
-      brightness -= 4;
-      brightness = (brightness < 4) ? 4 : brightness;
-    } else if (M5.BtnC.isPressed()) {
-      brightness += 4;
-      brightness = (brightness >= 248) ? 248 : brightness;
-    }
-    M5.Lcd.setBrightness(brightness);
-    Serial.println(brightness);
-    return false;
-  } 
-  return false;
-}
-
 // Video medium
 void medium() {
   uint8_t counter = 0;
@@ -200,14 +205,12 @@ void medium() {
   total_decode_video = 0;
   total_show_video   = 0;
 
-  // mediumInit();
-
   // Gunzip
   tarGzFS.begin();
 
   while (1) {
     while (videoCurrent == videoLast) {
-      videoCurrent = random(indiceMedium);  // Returns a pseudo-random integer between 0 and number of video files
+      videoCurrent = random(indice);  // Returns a pseudo-random integer between 0 and number of video files
     }
 
     Serial.println(videoFilenameMedium[videoCurrent]);
@@ -215,14 +218,12 @@ void medium() {
     cover = videoFilenameMedium[videoCurrent];
     cover.replace(".mjpg.gz", ".jpg");
 
-    Serial.println(cover);
-
     M5.Lcd.drawJpgFile(LittleFS, "/" + cover, 84, 0);
 
     led();
 
+    load = true;
     GzUnpacker *GZUnpacker = new GzUnpacker();
-
     GZUnpacker->haltOnError(true);                   // stop on fail (manual restart/reset required)
     GZUnpacker->setupFSCallbacks(targzTotalBytesFn,
                                  targzFreeBytesFn);  // prevent the partition from exploding, recommended
@@ -252,12 +253,14 @@ void medium() {
         curr_ms  = millis();
         mjpegClass.setup(&mjpegFile, mjpegBuf, mjpegDrawCallback, true, 84, 0, 228, 240);
         while (mjpegFile.available()) {
-          led();
-          if (button() == true) {
+          // Skip
+          if (skip) {
+            Serial.println(F("MJPEG skip"));
             mjpegFile.close();
-            free(mjpegBuf);
             LittleFS.remove("/tmp.mjpg");
+            free(mjpegBuf);
             videoLast = videoCurrent;
+            counter++;
             return;
           }
           // Read video
@@ -267,6 +270,12 @@ void medium() {
 
           // Play video
           mjpegClass.drawJpg();
+
+          if(load == true)
+          {
+            led();
+            load = false;
+          }
 
           total_decode_video += millis() - curr_ms;
           curr_ms = millis();
@@ -282,7 +291,9 @@ void medium() {
     videoLast = videoCurrent;
 
     counter++;
-    if (counter == limit) {
+
+    Serial.printf("%d %d \n", counter, limit);
+    if (counter >= limit) {
       eye();
       mediumInit();
       counter = 0;
