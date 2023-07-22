@@ -3,6 +3,7 @@
 
 #include "HAL9000.h"
 #include "font.h"
+#include "wav.h"
 #include "functions.h"
 
 // Setup
@@ -40,6 +41,18 @@ void setup() {
   // Init Rand
   esp_random();
 
+  // Sound
+  auto spk_cfg = M5.Speaker.config();
+
+  if (spk_cfg.use_dac || spk_cfg.buzzer)
+  {
+  /// Increasing the sample_rate will improve the sound quality instead of increasing the CPU load.
+    spk_cfg.sample_rate = 192000; // default:64000 (64kHz)  e.g. 48000 , 50000 , 80000 , 96000 , 100000 , 128000 , 144000 , 192000 , 200000
+  }
+  M5.Speaker.config(spk_cfg);
+  
+  //M5.Speaker.begin();
+
   // Init Display
   gfx->begin();
   gfx->setRotation(2);
@@ -48,6 +61,15 @@ void setup() {
 
   // Clean LittleFS
   LittleFS.remove("/tmp.mjpg");
+
+  // Multitasking task for retreive button
+  xTaskCreatePinnedToCore(button,    // Function to implement the task
+                          "button",  // Name of the task
+                          8192,      // Stack size in words
+                          NULL,      // Task input parameter
+                          4,         // Priority of the task
+                          NULL,      // Task handle
+                          1);        // Core where the task should run
 
   // Boot
   boot();

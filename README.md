@@ -15,7 +15,11 @@
 
 **Many thanks to them and all my [donors](#donations)🙏🏻** 
 
-This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simulator on M5Stack. Use cases ? None ! It's just for fun 😎 
+This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simulator on M5Stack. Use cases ? None ! It's just for fun 😎 The challenge was to store 60 small videos directly in Flash memory. Special thanks to [Tobozo](https://twitter.com/TobozoTagada) for his [ESP32-targz](https://github.com/tobozo/ESP32-targz) library. It was a great help, so thank you dude 🤗
+
+# Usage
+
+Use left and right buttons to adjust brightness. Use the middle button to hear HAL9000.
 
 # Credits
  

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // Version
-#define VERSION "0.0.2"
+#define VERSION "1.0.0"
 #define AUTHOR  "F4HWN"
 #define NAME    "HAL9000"
 
@@ -46,14 +46,14 @@ fs::File mjpegFile;
 String videoFilenameMedium[128];
 String videoFilenameSmall[128];
 
-uint8_t indiceMedium  = 0;
-uint8_t indiceSmall   = 0;
-uint8_t screenCurrent = 0;
-uint8_t screenLast    = 0;
-uint8_t videoCurrent  = 0;
-uint8_t videoLast     = 0;
-uint8_t brightness    = 16;
-uint8_t limit         = 128;
+boolean load = false;
+boolean skip = false;
+
+uint8_t indice       = 0;
+uint8_t videoCurrent = 0;
+uint8_t videoLast    = 0;
+uint8_t brightness   = 16;
+uint8_t limit        = 10;
 
 #if BOARD == CORE
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
