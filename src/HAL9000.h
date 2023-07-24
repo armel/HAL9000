@@ -6,7 +6,7 @@
 #define AUTHOR  "F4HWN"
 #define NAME    "HAL9000"
 
-#define RANDOM 0  // Set to 1 for random view
+#define RANDOM 1  // Set to 1 for random view
 #define CORE   1
 #define CORE2  2
 #define CORES3 3
