@@ -26,8 +26,8 @@ void getVideoList(File dir) {
       M5.Lcd.drawString(entry.name(), 200, 80);
 
       if (strstr(entry.name(), "-medium") != NULL) {
-        videoFilenameMedium[indice] = entry.name();
-        indice++;
+        videoFilenameMedium[limit] = entry.name();
+        limit++;
         delay(50);
       }
     }
@@ -44,7 +44,7 @@ void getVideoList(File dir) {
 // Check button
 void button(void *pvParameters) {
   uint8_t btnA, btnB, btnC;
-
+  
   for (;;) {
     skip = false;
 
@@ -56,17 +56,22 @@ void button(void *pvParameters) {
 
     if (btnB && load == false) {
       playWav("/HAL9000.wav");
-      //skip = true;
+      // skip = true;
     } else if (btnA || btnC) {
       if (btnA) {
-        brightness -= 4;
-        brightness = (brightness < 4) ? 4 : brightness;
+        brightnessOld -= 2;
+        brightnessOld = (brightnessOld < 2) ? 2 : brightnessOld;
       } else if (btnC) {
-        brightness += 4;
-        brightness = (brightness >= 248) ? 248 : brightness;
+        brightnessOld += 2;
+        brightnessOld = (brightnessOld >= 252) ? 252 : brightnessOld;
       }
-      M5.Lcd.setBrightness(brightness);
-      Serial.println(brightness);
+
+      if (brightnessOld != brightness) {
+        brightness = brightnessOld;
+        M5.Lcd.setBrightness(brightness);
+        preferences.putUInt("brightness", brightness);
+        Serial.println(brightness);
+      }
     }
 
     vTaskDelay(pdMS_TO_TICKS(20));
@@ -209,8 +214,13 @@ void medium() {
   tarGzFS.begin();
 
   while (1) {
-    while (videoCurrent == videoLast) {
-      videoCurrent = random(indice);  // Returns a pseudo-random integer between 0 and number of video files
+    if (RANDOM == 1) {
+      while (videoCurrent == videoLast) {
+        videoCurrent = random(limit);  // Returns a pseudo-random integer between 0 and number of video files
+      }
+    } else {
+      indice       = (indice++ < (limit - 1)) ? indice : 0;
+      videoCurrent = indice;
     }
 
     Serial.println(videoFilenameMedium[videoCurrent]);
@@ -222,7 +232,7 @@ void medium() {
 
     led();
 
-    load = true;
+    load                   = true;
     GzUnpacker *GZUnpacker = new GzUnpacker();
     GZUnpacker->haltOnError(true);                   // stop on fail (manual restart/reset required)
     GZUnpacker->setupFSCallbacks(targzTotalBytesFn,
@@ -271,8 +281,7 @@ void medium() {
           // Play video
           mjpegClass.drawJpg();
 
-          if(load == true)
-          {
+          if (load == true) {
             led();
             load = false;
           }
@@ -293,7 +302,7 @@ void medium() {
     counter++;
 
     Serial.printf("%d %d \n", counter, limit);
-    if (counter >= limit) {
+    if (counter >= showEye) {
       eye();
       mediumInit();
       counter = 0;

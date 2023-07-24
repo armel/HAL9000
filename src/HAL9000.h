@@ -2,11 +2,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // Version
-#define VERSION "1.0.0"
+#define VERSION "1.0.1"
 #define AUTHOR  "F4HWN"
 #define NAME    "HAL9000"
 
-#define DEBUG  0
+#define RANDOM 0  // Set to 1 for random view
 #define CORE   1
 #define CORE2  2
 #define CORES3 3
@@ -19,12 +19,16 @@
 #define DEST_FS_USES_LITTLEFS
 
 // Dependencies
+#include <Preferences.h>
 #include <LittleFS.h>
 #include <ESP32-targz.h>
 #include <FastLED.h>
 #include <M5Unified.h>
 #include <Arduino_GFX_Library.h>
 #include "MjpegClass.h"
+
+// Preferences
+Preferences preferences;
 
 // LED
 #define FASTLED_INTERNAL  // To disable pragma messages on compile
@@ -49,16 +53,20 @@ String videoFilenameSmall[128];
 boolean load = false;
 boolean skip = false;
 
-uint8_t indice       = 0;
-uint8_t videoCurrent = 0;
-uint8_t videoLast    = 0;
-uint8_t brightness   = 16;
-uint8_t limit        = 10;
+int8_t indice         = 0;
+uint8_t limit         = 0;
+uint8_t videoCurrent  = 0;
+uint8_t videoLast     = 0;
+uint8_t brightness    = 32;
+uint8_t brightnessOld = 0;
+uint8_t showEye       = 10;
 
 #if BOARD == CORE
 Arduino_DataBus *bus = new Arduino_ESP32SPI(27 /* DC */, 14 /* CS */, SCK, MOSI, MISO);
-Arduino_GFX *gfx     = new Arduino_ILI9342(bus, 33 /* RST */, 0 /* rotation */);
+Arduino_GFX *gfx     = new Arduino_ILI9342(bus, 33 /* RST */, 2 /* rotation */);
 #elif BOARD == CORE2
 Arduino_DataBus *bus = new Arduino_ESP32SPI(15 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
-Arduino_GFX *gfx     = new Arduino_ILI9342(bus, 33 /* RST */, 0 /* rotation */);
+Arduino_GFX *gfx     = new Arduino_ILI9342(bus, 33 /* RST */, 2 /* rotation */);
+#elif BOARD == CORES3
+// Todo
 #endif
