@@ -62,8 +62,8 @@ void setup() {
 
   // Init Display
   gfx->begin();
-  gfx->fillScreen(TFT_BOOT);
   gfx->invertDisplay(true);
+  gfx->fillScreen(TFT_BOOT);
 
   M5.Lcd.setBrightness(brightness);
 
