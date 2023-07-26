@@ -11,8 +11,6 @@
 ![version](https://img.shields.io/github/v/release/armel/ICSMeter)
 ![activity](https://img.shields.io/github/commit-activity/y/armel/ICSMeter)
 
-**You could use the code F4HWN in order to get 5% discount on the [M5Stack shop](https://shop.m5stack.com/?ref=LUxetaH4) 🎁**
-
 **Many thanks to them and all my [donors](#donations)🙏🏻** 
 
 This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simulator on M5Stack. Use cases ? None ! It's just for fun 😎 The challenge was to store 60 small videos directly in Flash memory. Special thanks to [Tobozo](https://twitter.com/TobozoTagada) for his [ESP32-targz](https://github.com/tobozo/ESP32-targz) library. It was a great help, so thank you dude 🤗
@@ -40,6 +38,6 @@ Special thanks to Rolf Schroeder DL8BAG, Brian Garber WB8AM, Matt B-Wilkinson M6
 
 If you find this project fun and useful then [buy me a glass of wine](https://www.paypal.me/F4HWN) 🍷 🤗 
 
-You could use the code F4HWN in order to get 5% discount on the [M5Stack shop](https://shop.m5stack.com/?ref=LUxetaH4) 🎁
+~~You could use the code F4HWN in order to get 5% discount on the [M5Stack shop](https://shop.m5stack.com/?ref=LUxetaH4) 🎁~~
 
 By the way, you can follow me on [Twitter](https://twitter.com/F4HWN) and post pictures of your installation with your M5Stack. It always makes me happy ;) 
