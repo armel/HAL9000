@@ -29,7 +29,13 @@ void setup() {
 
   M5.begin(cfg);
 
+  // Preferences
+  preferences.begin(NAME);
+  brightness  = preferences.getUInt("brightness", 32);
+  brightnessOld = brightness;
+
   // Init Led
+#if BOARD != CORES3
   if (M5.getBoard() == m5::board_t::board_M5Stack) {
     FastLED.addLeds<NEOPIXEL, 15>(leds,
                                   NUM_LEDS);  // GRB ordering is assumed
@@ -37,6 +43,7 @@ void setup() {
     FastLED.addLeds<NEOPIXEL, 25>(leds,
                                   NUM_LEDS);  // GRB ordering is assumed
   }
+#endif
 
   // Init Rand
   esp_random();
@@ -44,20 +51,21 @@ void setup() {
   // Sound
   auto spk_cfg = M5.Speaker.config();
 
-  if (spk_cfg.use_dac || spk_cfg.buzzer)
-  {
-  /// Increasing the sample_rate will improve the sound quality instead of increasing the CPU load.
-    spk_cfg.sample_rate = 192000; // default:64000 (64kHz)  e.g. 48000 , 50000 , 80000 , 96000 , 100000 , 128000 , 144000 , 192000 , 200000
+  if (spk_cfg.use_dac || spk_cfg.buzzer) {
+    /// Increasing the sample_rate will improve the sound quality instead of increasing the CPU load.
+    spk_cfg.sample_rate =
+      192000;  // default:64000 (64kHz)  e.g. 48000 , 50000 , 80000 , 96000 , 100000 , 128000 , 144000 , 192000 , 200000
   }
   M5.Speaker.config(spk_cfg);
-  
-  //M5.Speaker.begin();
+
+  // M5.Speaker.begin();
 
   // Init Display
   gfx->begin();
-  gfx->setRotation(2);
   gfx->fillScreen(TFT_BOOT);
   gfx->invertDisplay(true);
+
+  M5.Lcd.setBrightness(brightness);
 
   // Clean LittleFS
   LittleFS.remove("/tmp.mjpg");
