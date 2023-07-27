@@ -4,7 +4,7 @@
 ![fire](https://img.shields.io/badge/M5Stack-FIRE-orange)
 ![core2](https://img.shields.io/badge/M5Stack-CORE2-green)
 ![aws](https://img.shields.io/badge/M5Stack-AWS-orange)
-![cores3](https://img.shields.io/badge/M5Stack-CORES3-grey)
+![cores3](https://img.shields.io/badge/M5Stack-CORES3-purple)
 
 ![licence](https://img.shields.io/github/license/armel/ICSMeter)
 ![language](https://img.shields.io/github/languages/top/armel/ICSMeter)
