@@ -26,9 +26,8 @@ Many thanks to...
 | Project             | Author                                                |  Link                                           |
 |:------------------- | :---------------------------------------------------- | :---------------------------------------------- |
 | The HAL Project     | Joe                                                   | https://www.youtube.com/@TheHALProject/featured |
-| M5Stack             | [M5Stack](https://twitter.com/M5Stack)                | https://github.com/m5stack/M5Stack              |
+| M5Unified           | [Lovyan03](https://twitter.com/lovyan03)              | https://github.com/m5stack/M5Unified            |
 | ESP32-targz         | [Tobozo](https://twitter.com/TobozoTagada)            | https://github.com/tobozo/ESP32-targz           |
-| Arduino_GFX         | Moononournation                                       | https://github.com/moononournation/Arduino_GFX  |
 | JPEGDEC             | Larry Bank                                            | https://github.com/bitbank2/JPEGDEC             |
 | FastLED             | FastLED                                               | https://github.com/FastLED/FastLED              |
 

@@ -11,14 +11,13 @@ void setup() {
   // Init M5
   auto cfg = M5.config();
 
-  cfg.clear_display = true;  // default=true. clear the screen when begin.
-  // cfg.output_power  = false;  // default=true. use external port 5V output.
-  cfg.internal_imu = true;                      // default=true. use internal IMU.
-  cfg.internal_rtc = true;                      // default=true. use internal RTC.
-  cfg.internal_spk = true;                      // default=true. use internal speaker.
-  cfg.internal_mic = true;                      // default=true. use internal microphone.
-  cfg.external_imu = false;                     // default=false. use Unit Accel & Gyro.
-  cfg.external_rtc = false;                     // default=false. use Unit RTC.
+  cfg.clear_display = true;                     // default=true. clear the screen when begin.
+  cfg.internal_imu  = true;                     // default=true. use internal IMU.
+  cfg.internal_rtc  = true;                     // default=true. use internal RTC.
+  cfg.internal_spk  = true;                     // default=true. use internal speaker.
+  cfg.internal_mic  = true;                     // default=true. use internal microphone.
+  cfg.external_imu  = false;                    // default=false. use Unit Accel & Gyro.
+  cfg.external_rtc  = false;                    // default=false. use Unit RTC.
 
   cfg.external_display.module_display = true;   // default=true. use ModuleDisplay
   cfg.external_display.atom_display   = true;   // default=true. use AtomDisplay
@@ -29,9 +28,11 @@ void setup() {
 
   M5.begin(cfg);
 
+  Serial.printf("On start %d\n", M5.getDisplayCount());
+
   // Preferences
   preferences.begin(NAME);
-  brightness  = preferences.getUInt("brightness", 32);
+  brightness    = preferences.getUInt("brightness", BRIGHTNESS);
   brightnessOld = brightness;
 
   // Init Led
@@ -60,12 +61,8 @@ void setup() {
 
   // M5.Speaker.begin();
 
-  // Init Display
-  gfx->begin();
-  gfx->invertDisplay(true);
-  gfx->fillScreen(TFT_BOOT);
-
-  M5.Lcd.setBrightness(brightness);
+  M5.Displays(0).setBrightness(brightness);
+  M5.Displays(0).fillScreen(TFT_BOOT);
 
   // Clean LittleFS
   LittleFS.remove("/tmp.mjpg");
