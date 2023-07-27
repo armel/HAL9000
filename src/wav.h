@@ -1,12 +1,11 @@
 // Copyright (c) F4HWN Armel. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-static constexpr const size_t buf_num = 3;
+static constexpr const size_t buf_num  = 3;
 static constexpr const size_t buf_size = 1024;
 static uint8_t wav_data[buf_num][buf_size];
 
-struct __attribute__((packed)) wav_header_t
-{
+struct __attribute__((packed)) wav_header_t {
   char RIFF[4];
   uint32_t chunk_size;
   char WAVEfmt[8];
@@ -19,42 +18,36 @@ struct __attribute__((packed)) wav_header_t
   uint16_t bit_per_sample;
 };
 
-struct __attribute__((packed)) sub_chunk_t
-{
+struct __attribute__((packed)) sub_chunk_t {
   char identifier[4];
   uint32_t chunk_size;
   uint8_t data[1];
 };
 
-static bool playWav(const char* filename)
-{
+static bool playWav(const char* filename) {
   auto file = LittleFS.open(filename);
 
-  if (!file) { return false; }
+  if (!file) {
+    return false;
+  }
 
   wav_header_t wav_header;
   file.read((uint8_t*)&wav_header, sizeof(wav_header_t));
 
-  ESP_LOGD("wav", "RIFF           : %.4s" , wav_header.RIFF          );
-  ESP_LOGD("wav", "chunk_size     : %d"   , wav_header.chunk_size    );
-  ESP_LOGD("wav", "WAVEfmt        : %.8s" , wav_header.WAVEfmt       );
-  ESP_LOGD("wav", "fmt_chunk_size : %d"   , wav_header.fmt_chunk_size);
-  ESP_LOGD("wav", "audiofmt       : %d"   , wav_header.audiofmt      );
-  ESP_LOGD("wav", "channel        : %d"   , wav_header.channel       );
-  ESP_LOGD("wav", "sample_rate    : %d"   , wav_header.sample_rate   );
-  ESP_LOGD("wav", "byte_per_sec   : %d"   , wav_header.byte_per_sec  );
-  ESP_LOGD("wav", "block_size     : %d"   , wav_header.block_size    );
-  ESP_LOGD("wav", "bit_per_sample : %d"   , wav_header.bit_per_sample);
+  ESP_LOGD("wav", "RIFF           : %.4s", wav_header.RIFF);
+  ESP_LOGD("wav", "chunk_size     : %d", wav_header.chunk_size);
+  ESP_LOGD("wav", "WAVEfmt        : %.8s", wav_header.WAVEfmt);
+  ESP_LOGD("wav", "fmt_chunk_size : %d", wav_header.fmt_chunk_size);
+  ESP_LOGD("wav", "audiofmt       : %d", wav_header.audiofmt);
+  ESP_LOGD("wav", "channel        : %d", wav_header.channel);
+  ESP_LOGD("wav", "sample_rate    : %d", wav_header.sample_rate);
+  ESP_LOGD("wav", "byte_per_sec   : %d", wav_header.byte_per_sec);
+  ESP_LOGD("wav", "block_size     : %d", wav_header.block_size);
+  ESP_LOGD("wav", "bit_per_sample : %d", wav_header.bit_per_sample);
 
-  if ( memcmp(wav_header.RIFF,    "RIFF",     4)
-    || memcmp(wav_header.WAVEfmt, "WAVEfmt ", 8)
-    || wav_header.audiofmt != 1
-    || wav_header.bit_per_sample < 8
-    || wav_header.bit_per_sample > 16
-    || wav_header.channel == 0
-    || wav_header.channel > 2
-    )
-  {
+  if (memcmp(wav_header.RIFF, "RIFF", 4) || memcmp(wav_header.WAVEfmt, "WAVEfmt ", 8) || wav_header.audiofmt != 1 ||
+      wav_header.bit_per_sample < 8 || wav_header.bit_per_sample > 16 || wav_header.channel == 0 ||
+      wav_header.channel > 2) {
     file.close();
     return false;
   }
@@ -64,31 +57,31 @@ static bool playWav(const char* filename)
 
   file.read((uint8_t*)&sub_chunk, 8);
 
-  ESP_LOGD("wav", "sub id         : %.4s" , sub_chunk.identifier);
-  ESP_LOGD("wav", "sub chunk_size : %d"   , sub_chunk.chunk_size);
+  ESP_LOGD("wav", "sub id         : %.4s", sub_chunk.identifier);
+  ESP_LOGD("wav", "sub chunk_size : %d", sub_chunk.chunk_size);
 
-  while(memcmp(sub_chunk.identifier, "data", 4))
-  {
-    if (!file.seek(sub_chunk.chunk_size, SeekMode::SeekCur)) { break; }
+  while (memcmp(sub_chunk.identifier, "data", 4)) {
+    if (!file.seek(sub_chunk.chunk_size, SeekMode::SeekCur)) {
+      break;
+    }
     file.read((uint8_t*)&sub_chunk, 8);
 
-    ESP_LOGD("wav", "sub id         : %.4s" , sub_chunk.identifier);
-    ESP_LOGD("wav", "sub chunk_size : %d"   , sub_chunk.chunk_size);
+    ESP_LOGD("wav", "sub id         : %.4s", sub_chunk.identifier);
+    ESP_LOGD("wav", "sub chunk_size : %d", sub_chunk.chunk_size);
   }
 
-  if (memcmp(sub_chunk.identifier, "data", 4))
-  {
+  if (memcmp(sub_chunk.identifier, "data", 4)) {
     file.close();
     return false;
   }
 
   int32_t data_len = sub_chunk.chunk_size;
-  bool flg_16bit = (wav_header.bit_per_sample >> 4);
+  bool flg_16bit   = (wav_header.bit_per_sample >> 4);
 
   size_t idx = 0;
   while (data_len > 0) {
     size_t len = data_len < buf_size ? data_len : buf_size;
-    len = file.read(wav_data[idx], len);
+    len        = file.read(wav_data[idx], len);
     data_len -= len;
 
     if (flg_16bit) {
