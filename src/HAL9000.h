@@ -56,6 +56,6 @@ int8_t indice          = 0;
 uint8_t limit          = 0;
 uint8_t videoCurrent   = 0;
 uint8_t videoLast      = 0;
-uint8_t showEye        = 1;
+uint8_t showEye        = 10;
 uint16_t brightness    = BRIGHTNESS;
 uint16_t brightnessOld = 0;

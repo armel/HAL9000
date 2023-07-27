@@ -69,7 +69,11 @@ void button(void *pvParameters) {
     {"myBtnC", 220, 160, 100, 80, 1000, true, false},
   };
 #else
-  Button myBtn[] = {};
+  Button myBtn[] = {
+    {"myBtnA", 0, 240, 100, 80, 1000, true, false},
+    {"myBtnB", 110, 240, 100, 80, 1000, true, false},
+    {"myBtnC", 220, 240, 100, 80, 1000, true, false},
+  };
 #endif
 
   for (;;) {
@@ -317,7 +321,7 @@ void medium() {
 
     load                   = true;
     GzUnpacker *GZUnpacker = new GzUnpacker();
-    GZUnpacker->haltOnError(true);                          // stop on fail (manual restart/reset required)
+    GZUnpacker->haltOnError(true);  // stop on fail (manual restart/reset required)
     GZUnpacker->setupFSCallbacks(targzTotalBytesFn,
                                  targzFreeBytesFn);         // prevent the partition from exploding, recommended
     GZUnpacker->setGzProgressCallback(myProgressCallback);  // targzNullProgressCallback or defaultProgressCallback
