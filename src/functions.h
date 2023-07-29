@@ -25,11 +25,9 @@ void getVideoList(File dir) {
       M5.Displays(0).setTextDatum(CC_DATUM);
       M5.Displays(0).drawString(entry.name(), 200, 80);
 
-      if (strstr(entry.name(), "-medium") != NULL) {
-        videoFilenameMedium[limit] = entry.name();
-        limit++;
-        delay(50);
-      }
+      videoFilenameMedium[limit] = entry.name();
+      limit++;
+      delay(50);
     }
 
     if (entry.isDirectory() && strstr(entry.name(), "/.") == NULL) {

@@ -2,11 +2,11 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 // Version
-#define VERSION "1.2.0"
+#define VERSION "1.3.0"
 #define AUTHOR  "F4HWN"
 #define NAME    "HAL9000"
 
-#define RANDOM 1  // Set to 1 for random view
+#define RANDOM 0  // Set to 1 for random view
 #define CORE   1
 #define CORE2  2
 #define CORES3 3
