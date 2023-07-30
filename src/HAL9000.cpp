@@ -62,7 +62,7 @@ void setup() {
   // M5.Speaker.begin();
 
   M5.Displays(0).setBrightness(brightness);
-  M5.Displays(0).fillScreen(TFT_BOOT);
+  M5.Displays(0).fillScreen(TFT_HAL9000);
 
   // Clean LittleFS
   LittleFS.remove("/tmp.mjpg");

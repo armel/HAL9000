@@ -12,15 +12,20 @@
 #define CORES3 3
 
 // Others define
-#define JPEG_LOGO         "/HAL9000.jpg"
-#define JPEG_EYE          "/HAL9000-eye.jpg"
-#define MJPEG_BUFFER_SIZE 228 * 240 * 2  // Memory for a single JPEG frame
-#define TFT_BOOT          M5.Displays(0).color565(32, 32, 32)
+#define HAL9000_FOLDER "/HAL9000"
+#define HAL9000_LOGO   "/HAL9000.jpg"
+#define HAL9000_EYE    "/HAL9000-eye.jpg"
+#define HAL9000_WAV    "/HAL9000.wav"
+
+#define TFT_HAL9000       M5.Displays(0).color565(16, 16, 16)
+#define MJPEG_BUFFER_SIZE 228 * 240 * 1  // Memory for a single JPEG frame
+
 #define DEST_FS_USES_LITTLEFS
 
 // Dependencies
 #include <Preferences.h>
 #include <LittleFS.h>
+#include <SD.h>
 #include <ESP32-targz.h>
 #include <FastLED.h>
 #include <M5Unified.h>
@@ -37,17 +42,10 @@ CRGB leds[NUM_LEDS];
 // Variables
 static MjpegClass mjpegClass;
 
-static int total_frames                 = 0;
-static unsigned long total_read_video   = 0;
-static unsigned long total_decode_video = 0;
-static unsigned long total_show_video   = 0;
-static unsigned long start_ms, curr_ms;
-
 fs::File root;
 fs::File mjpegFile;
 
-String videoFilenameMedium[128];
-String videoFilenameSmall[128];
+String videoFilename[128];
 
 boolean load = false;
 boolean skip = false;
