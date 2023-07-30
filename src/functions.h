@@ -4,23 +4,19 @@
 // Pixel drawing callback
 static int mjpegDrawCallback(JPEGDRAW *pDraw) {
   // Serial.printf("Draw pos = %d,%d. size = %d x %d\n", pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight);
-  M5.Displays(0).pushImage(pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight, pDraw->pPixels);
+  for (uint8_t d = 0; d < displayCount; d++) {
+    M5.Displays(d).pushImage(pDraw->x, pDraw->y, pDraw->iWidth, pDraw->iHeight, pDraw->pPixels);
+  }
   return 1;
 }
 
 // Copy file from LittleFS to SD
 void copy(String filename) {
   LittleFS.begin();
-  if (SD.begin(GPIO_NUM_4, SPI, 40000000)) {
+  if (SD.begin(GPIO_NUM_4, SPI, 10000000)) {
     if (!SD.exists(HAL9000_FOLDER)) {
       SD.mkdir(HAL9000_FOLDER);
     }
-
-    /*
-    filename = videoFilename[indice];
-    filename.replace(".mjpg.gz", ".mjpg");
-    filename = String(HAL9000_FOLDER) + "/" + filename;
-    */
 
     if (!SD.exists(filename)) {
       File sourceFile = LittleFS.open("/tmp.mjpg");
@@ -43,7 +39,7 @@ void copy(String filename) {
   }
 }
 
-// List files on SD
+// List files on LittleFS
 void getVideoList(File dir) {
   char module[4];
 
@@ -55,17 +51,18 @@ void getVideoList(File dir) {
     }
 
     if (strstr(entry.name(), "/.") == NULL && strstr(entry.name(), ".mjpg.gz") != NULL) {
-      M5.Displays(0).setTextPadding(200);
-      M5.Displays(0).setTextColor(TFT_WHITE, TFT_HAL9000);
-      M5.Displays(0).setTextDatum(CC_DATUM);
       sprintf(module, "%02d", limit + 1);
-      M5.Displays(0).drawString("Loading kernel modules " + String(module), 200, 65);
-      M5.Displays(0).drawString(entry.name(), 200, 80);
-
       videoFilename[limit] = entry.name();
       limit++;
 
-      M5.Displays(0).fillRect(102, 94, map(limit, 1, 60, 1, 200), 4, TFT_WHITE);
+      for (uint8_t d = 0; d < displayCount; d++) {
+        M5.Displays(d).setTextPadding(200);
+        M5.Displays(d).setTextColor(TFT_WHITE, TFT_HAL9000);
+        M5.Displays(d).setTextDatum(CC_DATUM);
+        M5.Displays(d).drawString("Loading kernel modules " + String(module), 200, 65);
+        M5.Displays(d).drawString(entry.name(), 200, 80);
+        M5.Displays(d).fillRect(102, 94, map(limit, 1, 60, 1, 200), 4, TFT_WHITE);
+      }
 
       delay(50);
     }
@@ -193,7 +190,7 @@ void button(void *pvParameters) {
   }
 }
 
-// Progress callback
+// Gunzip progress callback
 void myProgressCallback(uint8_t progress) {
   static int8_t myLastProgress = -1;
   if (myLastProgress != progress) {
@@ -222,13 +219,14 @@ void myProgressCallback(uint8_t progress) {
         if (progress < 100) Serial.print("▓");
         break;
     }
-    M5.Displays(0).fillRect(102, 160, progress * 2, 4, TFT_WHITE);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).fillRect(102, 160, progress * 2, 4, TFT_WHITE);
+    }
   }
 }
 
-// Set M5GO led
+// Set led on M5GO module
 void led() {
-  // LED
   RGBColor m5goColor = M5.Displays(0).readPixelRGB(100, 0);
   for (uint8_t i = 0; i <= 9; i++) {
     leds[i] = CRGB(m5goColor.r, m5goColor.g, m5goColor.b);
@@ -244,33 +242,41 @@ boolean boot() {
   if (!LittleFS.begin()) {
     Serial.println(F("ERROR: File System Mount Failed!"));
   } else {
-    M5.Displays(0).drawJpgFile(LittleFS, HAL9000_LOGO);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).drawJpgFile(LittleFS, HAL9000_LOGO);
+    }
 
     // Get video files
     root = LittleFS.open("/");
 
-    M5.Displays(0).setFont(&Ubuntu_Medium6pt7b);
-    M5.Displays(0).setTextDatum(CC_DATUM);
-    M5.Displays(0).setTextColor(TFT_WHITE, TFT_HAL9000);
-    M5.Displays(0).drawString(String(NAME) + " Version " + String(VERSION), 200, 20);
-    M5.Displays(0).drawString(" by " + String(AUTHOR), 200, 35);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).setFont(&Ubuntu_Medium6pt7b);
+      M5.Displays(d).setTextDatum(CC_DATUM);
+      M5.Displays(d).setTextColor(TFT_WHITE, TFT_HAL9000);
+      M5.Displays(d).drawString(String(NAME) + " Version " + String(VERSION), 200, 20);
+      M5.Displays(d).drawString(" by " + String(AUTHOR), 200, 35);
+    }
 
     getVideoList(root);
 
-    for (uint8_t i = 0; i < 5; i++) {
-      M5.Displays(0).drawString(" ", 200, 110);
-      delay(250);
-      M5.Displays(0).drawString("Loading complete", 200, 110);
-      delay(250);
-    }
+    for (uint8_t d = 0; d < displayCount; d++) {
+      for (uint8_t i = 0; i < 5; i++) {
+        M5.Displays(d).drawString(" ", 200, 110);
+        delay(250);
+        M5.Displays(d).drawString("Loading complete", 200, 110);
+        delay(250);
+      }
 
-    M5.Displays(0).drawString("I'm sorry Dave,", 200, 140);
-    M5.Displays(0).drawString("I'm afraid I can't do that.", 200, 155);
+      M5.Displays(d).drawString("I'm sorry Dave,", 200, 140);
+      M5.Displays(d).drawString("I'm afraid I can't do that.", 200, 155);
+    }
 
     playWav(HAL9000_WAV);
 
-    M5.Displays(0).drawString("HAL 9000 to Dr. Bowman.", 200, 185);
-    M5.Displays(0).drawString("2001: A space odyssey.", 200, 200);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).drawString("HAL 9000 to Dr. Bowman.", 200, 185);
+      M5.Displays(d).drawString("2001: A space odyssey.", 200, 200);
+    }
     delay(1000);
   }
   return true;
@@ -281,7 +287,9 @@ boolean eye() {
   if (!LittleFS.begin()) {
     Serial.println(F("ERROR: File System Mount Failed!"));
   } else {
-    M5.Displays(0).drawJpgFile(LittleFS, HAL9000_EYE);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).drawJpgFile(LittleFS, HAL9000_EYE);
+    }
   }
 
   /*
@@ -301,32 +309,38 @@ boolean eye() {
   delay(2000);
 
   for (uint8_t i = 0; i <= 120; i++) {
-    M5.Displays(0).drawFastHLine(0, i - 1, 320, TFT_BLACK);
-    M5.Displays(0).drawFastHLine(0, i, 320, TFT_WHITE);
-    M5.Displays(0).drawFastHLine(0, 240 - i, 320, TFT_WHITE);
-    M5.Displays(0).drawFastHLine(0, 240 - i + 1, 320, TFT_BLACK);
-    delay(5);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).drawFastHLine(0, i - 1, 320, TFT_BLACK);
+      M5.Displays(d).drawFastHLine(0, i, 320, TFT_WHITE);
+      M5.Displays(d).drawFastHLine(0, 240 - i, 320, TFT_WHITE);
+      M5.Displays(d).drawFastHLine(0, 240 - i + 1, 320, TFT_BLACK);
+      delay(5);
+    }
   }
 
-  M5.Displays(0).drawFastHLine(0, 120, 320, TFT_BLACK);
+  for (uint8_t d = 0; d < displayCount; d++) {
+    M5.Displays(d).drawFastHLine(0, 120, 320, TFT_BLACK);
+  }
 
   delay(200);
 
   return true;
 }
 
-// Video medium init
-void mediumInit() {
+// Video init
+void videoInit() {
   if (!LittleFS.begin()) {
     Serial.println(F("ERROR: File System Mount Failed!"));
   } else {
-    M5.Displays(0).drawJpgFile(LittleFS, HAL9000_LOGO);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).drawJpgFile(LittleFS, HAL9000_LOGO);
+    }
   }
   M5.Displays(0).setBrightness(brightness);
 }
 
-// Video medium
-void medium() {
+// Video
+void video() {
   uint8_t counter = 0;
   String screenshot, filename;
 
@@ -355,9 +369,11 @@ void medium() {
     filename.replace(".mjpg.gz", ".mjpg");
     filename = String(HAL9000_FOLDER) + "/" + filename;
 
-    M5.Displays(0).drawJpgFile(LittleFS, "/" + screenshot, 84, 0);
+    for (uint8_t d = 0; d < displayCount; d++) {
+      M5.Displays(d).drawJpgFile(LittleFS, "/" + screenshot, 84, 0);
+    }
 
-    // Grab color for M5GO
+    // Set leds on M5GO module
     led();
 
     load = true;
@@ -417,7 +433,8 @@ void medium() {
             load = false;
           }
 
-          delay(10);
+          // Small delay if no dual screen with Display module
+          if (displayCount == 1) delay(10);
         }
         Serial.println(F("MJPEG end"));
         mjpegFile.close();
@@ -435,7 +452,7 @@ void medium() {
     Serial.printf("%d %d \n", counter, limit);
     if (counter >= showEye) {
       eye();
-      mediumInit();
+      videoInit();
       counter = 0;
     }
   }

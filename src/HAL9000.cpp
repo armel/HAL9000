@@ -28,14 +28,16 @@ void setup() {
 
   M5.begin(cfg);
 
-  Serial.printf("On start %d\n", M5.getDisplayCount());
+  displayCount = M5.getDisplayCount();
+
+  Serial.printf("On start %d\n", displayCount);
 
   // Preferences
   preferences.begin(NAME);
   brightness    = preferences.getUInt("brightness", BRIGHTNESS);
   brightnessOld = brightness;
 
-  // Init Led
+  // Init Leds
 #if BOARD != CORES3
   if (M5.getBoard() == m5::board_t::board_M5Stack) {
     FastLED.addLeds<NEOPIXEL, 15>(leds,
@@ -49,7 +51,7 @@ void setup() {
   // Init Rand
   esp_random();
 
-  // Sound
+  // Init Sound
   auto spk_cfg = M5.Speaker.config();
 
   if (spk_cfg.use_dac || spk_cfg.buzzer) {
@@ -82,5 +84,5 @@ void setup() {
 
 // Main loop
 void loop() {
-  medium();
+  video();
 }

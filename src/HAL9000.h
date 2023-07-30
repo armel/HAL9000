@@ -6,7 +6,7 @@
 #define AUTHOR  "F4HWN"
 #define NAME    "HAL9000"
 
-#define RANDOM 0  // Set to 1 for random view
+#define RANDOM 1  // Set to 1 for random view
 #define CORE   1
 #define CORE2  2
 #define CORES3 3
@@ -20,6 +20,11 @@
 #define TFT_HAL9000       M5.Displays(0).color565(16, 16, 16)
 #define MJPEG_BUFFER_SIZE 228 * 240 * 1  // Memory for a single JPEG frame
 
+#define M5MODULEDISPLAY_LOGICAL_WIDTH  WIDTH   // Width
+#define M5MODULEDISPLAY_LOGICAL_HEIGHT HEIGHT  // Height
+#define M5MODULEDISPLAY_REFRESH_RATE   60      // Refresh rate
+#define M5MODULEDISPLAY_OUTPUT_WIDTH   960
+#define M5MODULEDISPLAY_OUTPUT_HEIGHT  480
 #define DEST_FS_USES_LITTLEFS
 
 // Dependencies
@@ -28,6 +33,7 @@
 #include <SD.h>
 #include <ESP32-targz.h>
 #include <FastLED.h>
+#include <M5ModuleDisplay.h>
 #include <M5Unified.h>
 #include "MjpegClass.h"
 
@@ -55,5 +61,6 @@ uint8_t limit          = 0;
 uint8_t videoCurrent   = 0;
 uint8_t videoLast      = 0;
 uint8_t showEye        = 10;
+uint8_t displayCount   = 0;
 uint16_t brightness    = BRIGHTNESS;
 uint16_t brightnessOld = 0;

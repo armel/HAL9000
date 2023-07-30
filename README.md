@@ -20,6 +20,20 @@ This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simul
 
 Use left and right buttons to adjust brightness. Use the middle button to hear HAL9000.
 
+You can optimize video loading times by using a simple micro SD card formatted in FAT32. After each decompression, the uncompressed video file will be saved on the SD card (in the `/HAL9000` folder). This uncompressed video file will be used for the next time.
+
+# Compilation
+
+First, edit `platformio.ini` file and change `default_envs` target :
+
+- `default_envs = core` for Core, 
+- `default_envs = core2` for Core2
+- `default_envs = cores3` for Core S3.
+
+You can compile the source code and flash your M5Stack.
+
+Remember to upload the FileSystem Image too (the `/data` folder content videos, images and wav). If you don't know how to upload the FileSystem Image, take a look at this [tutorial](https://www.donskytech.com/how-to-upload-filesystem-image-in-platformio-ide/).
+
 # Credits
  
 Many thanks to...
