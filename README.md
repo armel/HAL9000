@@ -6,11 +6,11 @@
 ![aws](https://img.shields.io/badge/M5Stack-AWS-orange)
 ![cores3](https://img.shields.io/badge/M5Stack-CORES3-purple)
 
-![licence](https://img.shields.io/github/license/armel/ICSMeter)
-![language](https://img.shields.io/github/languages/top/armel/ICSMeter)
-![size](https://img.shields.io/github/repo-size/armel/ICSMeter)
-![version](https://img.shields.io/github/v/release/armel/ICSMeter)
-![activity](https://img.shields.io/github/commit-activity/y/armel/ICSMeter)
+![licence](https://img.shields.io/github/license/armel/HAL9000)
+![language](https://img.shields.io/github/languages/top/armel/HAL9000)
+![size](https://img.shields.io/github/repo-size/armel/HAL9000)
+![version](https://img.shields.io/github/v/release/armel/HAL9000)
+![activity](https://img.shields.io/github/commit-activity/y/armel/HAL9000)
 
 **Many thanks to them and all my [donors](#donations)🙏🏻** 
 
