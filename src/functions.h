@@ -400,6 +400,10 @@ void video() {
 
     load = true;
 
+    if (LittleFS.exists(HAL9000_TMP)) {
+      LittleFS.remove(HAL9000_TMP);
+    }
+
     SD.begin(GPIO_NUM_4, SPI, 10000000);
 
     Serial.printf("Check on SD %s\n", filename);
