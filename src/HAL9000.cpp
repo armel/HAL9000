@@ -11,13 +11,13 @@ void setup() {
   // Init M5
   auto cfg = M5.config();
 
-  cfg.clear_display = true;                     // default=true. clear the screen when begin.
-  cfg.internal_imu  = true;                     // default=true. use internal IMU.
-  cfg.internal_rtc  = true;                     // default=true. use internal RTC.
-  cfg.internal_spk  = true;                     // default=true. use internal speaker.
-  cfg.internal_mic  = true;                     // default=true. use internal microphone.
-  cfg.external_imu  = false;                    // default=false. use Unit Accel & Gyro.
-  cfg.external_rtc  = false;                    // default=false. use Unit RTC.
+  cfg.clear_display = true;   // default=true. clear the screen when begin.
+  cfg.internal_imu  = true;   // default=true. use internal IMU.
+  cfg.internal_rtc  = true;   // default=true. use internal RTC.
+  cfg.internal_spk  = true;   // default=true. use internal speaker.
+  cfg.internal_mic  = true;   // default=true. use internal microphone.
+  cfg.external_imu  = false;  // default=false. use Unit Accel & Gyro.
+  cfg.external_rtc  = false;  // default=false. use Unit RTC.
 
   cfg.external_display.module_display = true;   // default=true. use ModuleDisplay
   cfg.external_display.atom_display   = true;   // default=true. use AtomDisplay
@@ -35,7 +35,11 @@ void setup() {
   // Preferences
   preferences.begin(NAME);
   brightness    = preferences.getUInt("brightness", BRIGHTNESS);
-  brightnessOld = brightness;
+  mode          = preferences.getBool("mode", RANDOM);
+
+  // Debug trace
+  Serial.printf("Brightness = %d\n", brightness);
+  Serial.printf("Mode = %d\n", mode);
 
   // Init Leds
 #if BOARD != CORES3
@@ -65,9 +69,6 @@ void setup() {
 
   M5.Displays(0).setBrightness(brightness);
   M5.Displays(0).fillScreen(TFT_HAL9000);
-
-  // Clean LittleFS
-  LittleFS.remove("/tmp.mjpg");
 
   // Multitasking task for retreive button
   xTaskCreatePinnedToCore(button,    // Function to implement the task

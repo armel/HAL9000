@@ -11,7 +11,9 @@ static int mjpegDrawCallback(JPEGDRAW *pDraw) {
 }
 
 // Copy file from LittleFS to SD
-void copy(String filename) {
+void copy(char* filename) {
+  char tmp[64];
+
   LittleFS.begin();
   if (SD.begin(GPIO_NUM_4, SPI, 10000000)) {
     if (!SD.exists(HAL9000_FOLDER)) {
@@ -19,11 +21,15 @@ void copy(String filename) {
     }
 
     if (!SD.exists(filename)) {
-      File sourceFile = LittleFS.open("/tmp.mjpg");
-      File destFile   = SD.open(String(HAL9000_FOLDER) + "/tmp.mjpg", FILE_WRITE);
+      File sourceFile = LittleFS.open(HAL9000_TMP);
+
+      sprintf(tmp, "%s%s", HAL9000_FOLDER, HAL9000_TMP);
+      Serial.println(tmp);
+
+      File destFile = SD.open(tmp, FILE_WRITE);
       static uint8_t buf[512];
 
-      Serial.printf("Start copy of %s on SD\n", filename.c_str());
+      Serial.printf("Start copy of %s on SD\n", filename);
       while (sourceFile.read(buf, 512)) {
         destFile.write(buf, 512);
       }
@@ -31,17 +37,17 @@ void copy(String filename) {
       destFile.close();
       sourceFile.close();
 
-      SD.rename(String(HAL9000_FOLDER) + "/tmp.mjpg", filename);
+      SD.rename(tmp, filename);
       Serial.println("Stop copy");
     } else {
-      Serial.printf("File %s exist\n", filename.c_str());
+      Serial.printf("File %s exist\n", filename);
     }
   }
 }
 
 // List files on LittleFS
 void getVideoList(File dir) {
-  char module[4];
+  char string[64];
 
   while (true) {
     File entry = dir.openNextFile();
@@ -51,15 +57,21 @@ void getVideoList(File dir) {
     }
 
     if (strstr(entry.name(), "/.") == NULL && strstr(entry.name(), ".mjpg.gz") != NULL) {
-      sprintf(module, "%02d", limit + 1);
-      videoFilename[limit] = entry.name();
+      // sprintf(module, "%02d", limit + 1);
+      //videoFilename[limit] = entry.name();
+
+      sprintf(string, "/%s", entry.name());
+      strcpy(videoFilename[limit], string);
       limit++;
 
       for (uint8_t d = 0; d < displayCount; d++) {
         M5.Displays(d).setTextPadding(200);
         M5.Displays(d).setTextColor(TFT_WHITE, TFT_HAL9000);
         M5.Displays(d).setTextDatum(CC_DATUM);
-        M5.Displays(d).drawString("Loading kernel modules " + String(module), 200, 65);
+
+        sprintf(string, "Loading kernel modules %02d", limit);
+
+        M5.Displays(d).drawString(string, 200, 65);
         M5.Displays(d).drawString(entry.name(), 200, 80);
         M5.Displays(d).fillRect(102, 94, map(limit, 1, 60, 1, 200), 4, TFT_WHITE);
       }
@@ -86,8 +98,10 @@ void button(void *pvParameters) {
   uint8_t btnB = 0;
   uint8_t btnC = 0;
 
+  uint16_t brightnessOld = 0;
+
   struct Button {
-    String name;     // name
+    char name[16];   // name
     int x;           // x
     int y;           // y
     int w;           // width
@@ -112,8 +126,6 @@ void button(void *pvParameters) {
 #endif
 
   for (;;) {
-    skip = false;
-
     M5.update();
 
     if (M5.getBoard() == m5::board_t::board_M5Stack || M5.getBoard() == m5::board_t::board_M5StackCore2) {
@@ -163,12 +175,16 @@ void button(void *pvParameters) {
     }
 
     if (btnB && load == false) {
+      mode = (mode == 0) ? 1 : 0;
+      preferences.putBool("mode", mode);
+      Serial.printf("Mode = %d\n", mode);
       playWav(HAL9000_WAV);
-      // skip = true;
     } else if (btnA || btnC) {
       if (M5.getBoard() == m5::board_t::board_M5StackCoreS3) {
         vTaskDelay(pdMS_TO_TICKS(100));
       }
+
+      brightnessOld = brightness;
 
       if (btnA) {
         brightnessOld -= step;
@@ -237,6 +253,8 @@ void led() {
 
 // Boot loader
 boolean boot() {
+  char string[64];
+
   led();
 
   if (!LittleFS.begin()) {
@@ -253,8 +271,12 @@ boolean boot() {
       M5.Displays(d).setFont(&Ubuntu_Medium6pt7b);
       M5.Displays(d).setTextDatum(CC_DATUM);
       M5.Displays(d).setTextColor(TFT_WHITE, TFT_HAL9000);
-      M5.Displays(d).drawString(String(NAME) + " Version " + String(VERSION), 200, 20);
-      M5.Displays(d).drawString(" by " + String(AUTHOR), 200, 35);
+      
+      sprintf(string, "%s Version %s", NAME, VERSION);
+      M5.Displays(d).drawString(string, 200, 20);
+
+      sprintf(string, "by %s", AUTHOR);
+      M5.Displays(d).drawString(string, 200, 35);
     }
 
     getVideoList(root);
@@ -341,8 +363,9 @@ void videoInit() {
 
 // Video
 void video() {
+  uint8_t *mjpegBuf = (uint8_t *)malloc(MJPEG_BUFFER_SIZE);
   uint8_t counter = 0;
-  String screenshot, filename;
+  char screenshot[64], filename[64], tmp[48];
 
   // SD
   SD.begin(GPIO_NUM_4, SPI, 10000000);
@@ -351,7 +374,7 @@ void video() {
   tarGzFS.begin();
 
   while (1) {
-    if (RANDOM == 1) {
+    if (mode == 1) {
       while (videoCurrent == videoLast) {
         videoCurrent = random(limit);  // Returns a pseudo-random integer between 0 and number of video files
       }
@@ -362,15 +385,14 @@ void video() {
 
     Serial.println(videoFilename[videoCurrent]);
 
-    screenshot = videoFilename[videoCurrent];
-    screenshot.replace(".mjpg.gz", ".jpg");
+    strcpy(tmp, videoFilename[videoCurrent]);
+    tmp[strlen(tmp)-strlen(".mjpg.gz")] = '\0';
 
-    filename = videoFilename[videoCurrent];
-    filename.replace(".mjpg.gz", ".mjpg");
-    filename = String(HAL9000_FOLDER) + "/" + filename;
+    sprintf(screenshot, "%s.jpg", tmp);
+    sprintf(filename, "%s%s.mjpg", HAL9000_FOLDER, tmp);
 
     for (uint8_t d = 0; d < displayCount; d++) {
-      M5.Displays(d).drawJpgFile(LittleFS, "/" + screenshot, 84, 0);
+      M5.Displays(d).drawJpgFile(LittleFS, screenshot, 84, 0);
     }
 
     // Set leds on M5GO module
@@ -380,15 +402,14 @@ void video() {
 
     SD.begin(GPIO_NUM_4, SPI, 10000000);
 
-    Serial.printf("Check on SD %s\n", filename.c_str());
+    Serial.printf("Check on SD %s\n", filename);
 
     if (SD.exists(filename)) {
-      Serial.printf("%s IS on SD\n", filename.c_str());
+      Serial.printf("%s IS on SD\n", filename);
       mjpegFile = SD.open(filename, FILE_READ);
       delay(2000);
     } else {
-      Serial.printf("%s IS NOT on SD\n", filename.c_str());
-      LittleFS.remove("/tmp.mjpg");
+      Serial.printf("%s IS NOT on SD\n", filename);
 
       GzUnpacker *GZUnpacker = new GzUnpacker();
       GZUnpacker->haltOnError(true);  // stop on fail (manual restart/reset required)
@@ -397,14 +418,14 @@ void video() {
       GZUnpacker->setGzProgressCallback(myProgressCallback);  // targzNullProgressCallback or defaultProgressCallback
       GZUnpacker->setLoggerCallback(BaseUnpacker::targzPrintLoggerCallback);  // gz log verbosity
 
-      if (!GZUnpacker->gzExpander(tarGzFS, ("/" + videoFilename[videoCurrent]).c_str(), tarGzFS, "/tmp.mjpg")) {
+      if (!GZUnpacker->gzExpander(tarGzFS, videoFilename[videoCurrent], tarGzFS, HAL9000_TMP)) {
         Serial.printf("gzExpander failed with return code #%d", GZUnpacker->tarGzGetError());
       }
 
       // Copy file on SD if possible
       copy(filename);
 
-      mjpegFile = LittleFS.open("/tmp.mjpg", FILE_READ);
+      mjpegFile = LittleFS.open(HAL9000_TMP, FILE_READ);
     }
 
     if (!mjpegFile || mjpegFile.isDirectory()) {
@@ -412,11 +433,11 @@ void video() {
       Serial.print(videoFilename[videoCurrent]);
       Serial.println(" file for reading");
     } else {
-      uint8_t *mjpegBuf = (uint8_t *)malloc(MJPEG_BUFFER_SIZE);
+      //uint8_t *mjpegBuf = (uint8_t *)malloc(MJPEG_BUFFER_SIZE);
 
       if (!mjpegBuf) {
         Serial.println(F("mjpegBuf malloc failed!"));
-        free(mjpegBuf);
+        //free(mjpegBuf);
       } else {
         Serial.println(F("MJPEG start"));
         mjpegClass.setup(&mjpegFile, mjpegBuf, mjpegDrawCallback, true, 84, 0, 228, 240);
@@ -438,7 +459,7 @@ void video() {
         }
         Serial.println(F("MJPEG end"));
         mjpegFile.close();
-        free(mjpegBuf);
+        //free(mjpegBuf);
       }
       Serial.printf("%d kb %d kb %d kb %d kb\n", ESP.getHeapSize() / 1024, ESP.getFreeHeap() / 1024,
                     ESP.getPsramSize() / 1024, ESP.getFreePsram() / 1024);
