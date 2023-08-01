@@ -45,7 +45,7 @@ class MjpegClass {
       while ((i < _buf_read) && (!found_FFD8)) {
         if ((_read_buf[i] == 0xFF) && (_read_buf[i + 1] == 0xD8))  // JPEG header
         {
-          // Serial.printf("Found FFD8 at: %d.\n", i);
+          //Serial.printf("Found FFD8 at: %d.\n", i);
           found_FFD8 = true;
         }
         ++i;
@@ -64,7 +64,7 @@ class MjpegClass {
       while ((_buf_read > 0) && (!found_FFD9)) {
         if ((_mjpeg_buf_offset > 0) && (_mjpeg_buf[_mjpeg_buf_offset - 1] == 0xFF) && (_p[0] == 0xD9))  // JPEG trailer
         {
-          // Serial.printf("Found FFD9 at: %d.\n", i);
+          //Serial.printf("Found FFD9 at: %d.\n", i);
           found_FFD9 = true;
         } else {
           while ((i < _buf_read) && (!found_FFD9)) {
@@ -77,7 +77,7 @@ class MjpegClass {
           }
         }
 
-        // Serial.printf("i: %d\n", i);
+        //Serial.printf("i: %d\n", i);
         memcpy(_mjpeg_buf + _mjpeg_buf_offset, _p, i);
         _mjpeg_buf_offset += i;
         size_t o = _buf_read - i;

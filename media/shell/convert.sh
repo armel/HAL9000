@@ -6,9 +6,9 @@ for filename in *; do
     last=$((${#filename}-10))
     indice=${filename:$last:6}
     new="$type-$indice"
-    mod=../video/${new// /-}-medium.mjpg
-    jpg=../video/${new// /-}-medium.jpg
-    gz=../video/${new// /-}-medium.mjpg.gz
+    mod=../video/${new// /-}.mjpg
+    jpg=../video/${new// /-}.jpg
+    gz=../video/${new// /-}.mjpg.gz
 
     resize="../video/$filename"
     # Scale

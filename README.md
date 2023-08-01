@@ -6,11 +6,11 @@
 ![aws](https://img.shields.io/badge/M5Stack-AWS-orange)
 ![cores3](https://img.shields.io/badge/M5Stack-CORES3-purple)
 
-![licence](https://img.shields.io/github/license/armel/ICSMeter)
-![language](https://img.shields.io/github/languages/top/armel/ICSMeter)
-![size](https://img.shields.io/github/repo-size/armel/ICSMeter)
-![version](https://img.shields.io/github/v/release/armel/ICSMeter)
-![activity](https://img.shields.io/github/commit-activity/y/armel/ICSMeter)
+![licence](https://img.shields.io/github/license/armel/HAL9000)
+![language](https://img.shields.io/github/languages/top/armel/HAL9000)
+![size](https://img.shields.io/github/repo-size/armel/HAL9000)
+![version](https://img.shields.io/github/v/release/armel/HAL9000)
+![activity](https://img.shields.io/github/commit-activity/y/armel/HAL9000)
 
 **Many thanks to them and all my [donors](#donations)🙏🏻** 
 
@@ -19,6 +19,20 @@ This project is a little [HAL9000](https://en.wikipedia.org/wiki/HAL_9000) simul
 # Usage
 
 Use left and right buttons to adjust brightness. Use the middle button to hear HAL9000.
+
+You can optimize video loading times by using a simple micro SD card formatted in FAT32. After each decompression, the uncompressed video file will be saved on the SD card (in the `/HAL9000` folder). This uncompressed video file will be used for the next time.
+
+# Compilation
+
+First, edit `platformio.ini` file and change `default_envs` target :
+
+- `default_envs = core` for Core, 
+- `default_envs = core2` for Core2
+- `default_envs = cores3` for Core S3.
+
+You can compile the source code and flash your M5Stack.
+
+Remember to upload the FileSystem Image too (the `/data` folder content videos, images and wav). If you don't know how to upload the FileSystem Image, take a look at this [tutorial](https://www.donskytech.com/how-to-upload-filesystem-image-in-platformio-ide/).
 
 # Credits
  
